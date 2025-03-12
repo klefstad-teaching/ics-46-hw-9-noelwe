@@ -1,0 +1,9 @@
+CXXFLAGS =-ggdb -std=c++20 -Wall -Wextra -Werror -Wfatal-errors -pedantic
+
+dijkstras: src/dijkstras_main.o src/dijkstras.o
+
+src/dijkstras_main.o: src/dijkstras_main.cpp
+	g++ $(CXXFLAGS) -c src/dijkstras_main.cpp -o src/dijkstras_main.o
+
+clean:
+	rm -f main src/*.o
