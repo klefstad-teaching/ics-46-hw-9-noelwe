@@ -3,7 +3,7 @@
 int main()
 {
     Graph G;
-    file_to_graph("small.txt",G);
+    file_to_graph("src/small.txt",G);
 
     int source = 0;
     vector<int> previous;
