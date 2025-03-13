@@ -17,7 +17,7 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
     for (int i = 0; i <= len1; ++i)
         dp[i][0] = i;
     for (int j = 0; j <= len2; ++j)
-        dp[0][i] = j;
+        dp[0][j] = j;
 
     for (int i = 1; i <= len1; ++i)
     {
@@ -81,7 +81,7 @@ void load_words(set<string> & word_list, const string& file_name)
 
     if (!file)
     {
-        error();
+        error("","", "File not found");
     }
 
     string word;
