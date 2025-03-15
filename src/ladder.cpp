@@ -10,33 +10,27 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
     int len1 = str1.length();
     int len2 = str2.length();
 
-    if (len1 == len2)
-    {
-        int diff_count = 0;
-        for (int i = 0; i < len1; ++i)
-        {
-            if (str1[i] != str2[i]) 
-            {
-                diff_count++;
-                if (diff_count > d) return false;
-            }
-        }
-        return diff_count == d;
-    }
-    
-    if (abs(len1 - len2) == d)
-    {
-        const std::string& longer = (len1 > len2) ? str1 : str2;
-        const std::string& shorter = (len1 > len2) ? str2 : str1;
+    if (abs(len1 - len2) > d) return false;
 
-        for (size_t i = 0, j = 0; i < longer.length(); ++i)
+    vector<vector<int>> dp(len1 + 1, vector<int>(len2 + 1));
+
+    for (int i = 0; i <= len1; ++i)
+        dp[i][0] = i;
+    for (int j = 0; j <= len2; ++j)
+        dp[0][j] = j;
+
+    for (int i = 1; i <= len1; ++i)
+    {
+        for (int j = 1; j <= len2; ++j)
         {
-            if (j < shorter.length() && longer[i] == shorter[j]) ++j;
-            if (i != j) return false;
+            int cost = (str1[i - 1] == str2[j - 1]) ? 0 : 1;
+
+            dp[i][j] = min({dp[i - 1][j] + 1,
+                            dp[i][j- 1 ] + 1,
+                            dp[i - 1][j - 1] + cost});
         }
-        return true;
     }
-    return false;
+    return dp[len1][len2] <= d;
 }
 
 bool is_adjacent(const string& word1, const string& word2)
