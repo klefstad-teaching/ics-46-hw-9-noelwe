@@ -10,32 +10,33 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
     int len1 = str1.length();
     int len2 = str2.length();
 
-    if (abs(len1 - len2) > d) return false;
-
-    vector<vector<int>> dp(len1 + 1, vector<int>(len2 + 1));
-
-    for (int i = 0; i <= len1; ++i)
-        dp[i][0] = i;
-    for (int j = 0; j <= len2; ++j)
-        dp[0][j] = j;
-
-    for (int i = 1; i <= len1; ++i)
+    if (len1 == len2)
     {
-        for (int j = 1; j <= len2; ++j)
+        int diff_count = 0;
+        for (int i = 0; i < len1; ++i)
         {
-            int cost = (str1[i - 1] == str2[j - 1]) ? 0 : 1;
-
-            dp[i][j] = min({dp[i - 1][j] + 1,
-                            dp[i][j- 1 ] + 1,
-                            dp[i - 1][j - 1] + cost});
-            
-            if (i > 1 && j > 1 && str1[i - 1] == str2[j - 2] && str1[i - 2] == str2[j - 1])
+            if (str1[i] != str2[i]) 
             {
-                dp[i][j] = min(dp[i][j], dp[i - 2][j - 2] + 1);
+                diff_count++;
+                if (diff_count > d) return false;
             }
         }
+        return diff_count == d;
     }
-    return dp[len1][len2] <= d;
+    
+    if (abs(len1 - len2) == d)
+    {
+        const std::string& longer = (len1 > len2) ? str1 : str2;
+        const std::string& shorter = (len1 > len2) ? str2 : str1;
+
+        for (size_t i = 0, j = 0; i < longer.length(); ++i)
+        {
+            if (j < shorter.length() && longer[i] == shorter[j]) ++j;
+            if (i != j) return false;
+        }
+        return true;
+    }
+    return false;
 }
 
 bool is_adjacent(const string& word1, const string& word2)
@@ -124,7 +125,7 @@ void verify_word_ladder()
 
     my_assert(generate_word_ladder("car", "cheat", word_list).size() == 4);
 
-    // vector<string> words = generate_word_ladder("awake", "sleep", word_list);
-    // print_word_ladder(words);
+    vector<string> words = generate_word_ladder("awake", "sleep", word_list);
+    print_word_ladder(words);
     // my_assert(words.size() == 8);
 }
